@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family: 'NotoSans';
+    src: local('Noto Sans CJK JP'), local('NotoSansCJK-Regular');
+  }
+  @font-face {
+    font-family: 'NotoSerif';
+    src: local('Noto Serif CJK JP'), local('NotoSerifCJK-Regular');
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'NotoSans', 'Noto Sans CJK JP', sans-serif;
+    font-size: 15px;
+    line-height: 1.85;
+    color: #1C1C1C;
+    background: #fff;
+  }
+
+  .page-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 56px 80px;
+  }
+  @media (max-width: 680px) {
+    .page-wrap { padding: 32px 20px; }
+  }
+
+  /* HEADER */
+  .doc-header {
+    border-bottom: 2px solid #1A2D4A;
+    padding-bottom: 18px;
+    margin-bottom: 24px;
+  }
+  .doc-brand {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: #999;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .doc-title {
+    font-family: 'NotoSans', 'Noto Sans CJK JP', sans-serif;
+    font-size: 26px;
+    font-weight: bold;
+    color: #1A2D4A;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .doc-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 16px;
+  }
+  .doc-meta {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #DADADA;
+    font-size: 13px;
+    color: #999;
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .doc-meta span b { color: #666; font-weight: 500; }
+
+  /* TOC */
+  .toc-wrap {
+    background: #FAFAFA;
+    border: 1px solid #DADADA;
+    border-radius: 4px;
+    padding: 18px 22px;
+    margin-bottom: 32px;
+  }
+  .toc-title {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    color: #999;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .toc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .toc-table td {
+    padding: 5px 10px 5px 0;
+    color: #444;
+    border-bottom: 1px dotted #DDD;
+    vertical-align: top;
+  }
+  .toc-table td:first-child {
+    color: #999;
+    width: 28px;
+    white-space: nowrap;
+  }
+  .toc-table tr:last-child td { border-bottom: none; }
+
+  /* SECTIONS */
+  .doc-section {
+    margin-bottom: 36px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #DADADA;
+  }
+  .doc-section:last-child { border-bottom: none; }
+
+  .sec-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .sec-num {
+    font-size: 11px;
+    font-weight: bold;
+    color: #AAA;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    min-width: 20px;
+  }
+  h2.sec-h {
+    font-family: 'NotoSans', 'Noto Sans CJK JP', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1A2D4A;
+    line-height: 1.4;
+    border-bottom: 1px solid #1A4A8A;
+    padding-bottom: 6px;
+    flex: 1;
+  }
+
+  p.body-text {
+    color: #555;
+    margin-bottom: 14px;
+    padding-left: 32px;
+    font-size: 14px;
+  }
+
+  h3.sub-h {
+    font-size: 14px;
+    font-weight: bold;
+    color: #1A2D4A;
+    margin: 20px 0 8px 32px;
+    padding-left: 10px;
+    border-left: 3px solid #1A4A8A;
+  }
+
+  ul.doc-list {
+    list-style: none;
+    padding-left: 32px;
+    margin-bottom: 14px;
+  }
+  ul.doc-list li {
+    padding: 5px 0 5px 16px;
+    position: relative;
+    color: #555;
+    font-size: 14px;
+    border-bottom: 1px dotted #E8E8E8;
+  }
+  ul.doc-list li:last-child { border-bottom: none; }
+  ul.doc-list li::before { content: '·'; position: absolute; left: 2px; color: #1A4A8A; font-size: 20px; line-height: 1.1; }
+  ul.doc-list.check li::before { content: ''; position: absolute; left: 0; top: 8px; width: 8px; height: 8px; background: #1A6B3C; border-radius: 50%; }
+  ul.doc-list.cross li::before  { content: ''; position: absolute; left: 0; top: 8px; width: 8px; height: 8px; background: #C0392B; border-radius: 50%; }
+  ul.doc-list.check li { padding-left: 18px; }
+  ul.doc-list.cross li { padding-left: 18px; }
+
+  /* TABLE */
+  .table-wrap { padding-left: 32px; margin-bottom: 14px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 480px; }
+  thead th {
+    background: #1A2D4A;
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+  }
+  tbody tr { border-bottom: 1px solid #DADADA; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:nth-child(even) { background: #FAFAFA; }
+  tbody td { padding: 10px 14px; color: #555; vertical-align: top; line-height: 1.65; }
+  tbody td:first-child { font-weight: 600; color: #1C1C1C; width: 28%; }
+  .trs-col { background: #F0F5FF !important; }
+
+  /* NOTICE */
+  .notice {
+    margin: 14px 0 14px 32px;
+    padding: 12px 16px;
+    font-size: 13px;
+    line-height: 1.75;
+  }
+  .notice-warn   { background: #FFF8E8; border-left: 3px solid #D4A017; color: #6B4F00; }
+  .notice-info   { background: #EFF4FF; border-left: 3px solid #1A4A8A; color: #1A2D4A; }
+  .notice-danger { background: #FFF0EF; border-left: 3px solid #C0392B; color: #7A1A13; }
+
+  /* STEP LIST */
+  .step-list { padding-left: 32px; list-style: none; margin-bottom: 14px; }
+  .step-list li {
+    padding: 14px 0 14px 60px;
+    position: relative;
+    border-bottom: 1px solid #DADADA;
+  }
+  .step-list li:last-child { border-bottom: none; }
+  .step-step-label {
+    position: absolute;
+    left: 0;
+    top: 16px;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    color: white;
+    background: #1A2D4A;
+    padding: 3px 6px;
+    border-radius: 2px;
+  }
+  .step-list li strong { display: block; font-size: 14px; font-weight: bold; color: #1A2D4A; margin-bottom: 4px; }
+  .step-list li span { font-size: 13px; color: #555; line-height: 1.75; }
+
+  /* FAQ */
+  .faq-list { padding-left: 32px; list-style: none; }
+  .faq-item { border-bottom: 1px solid #DADADA; padding: 14px 0; }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-q { font-size: 14px; font-weight: bold; color: #1A2D4A; display: flex; gap: 10px; margin-bottom: 6px; }
+  .faq-qlabel { color: #1A4A8A; flex-shrink: 0; }
+  .faq-a { font-size: 13px; color: #555; display: flex; gap: 10px; line-height: 1.8; }
+  .faq-alabel { color: #AAA; font-weight: bold; flex-shrink: 0; }
+
+  /* SUMMARY BOX */
+  .summary-box { margin: 14px 0 14px 32px; border: 1px solid #DADADA; border-radius: 4px; overflow: hidden; }
+  .summary-box-header { background: #1A2D4A; color: white; padding: 10px 16px; font-size: 13px; font-weight: bold; letter-spacing: 0.04em; }
+  .summary-box-body { padding: 14px 18px; font-size: 13px; color: #555; }
+  .summary-box-body ul { list-style: none; padding: 0; }
+  .summary-box-body ul li { padding: 5px 0; border-bottom: 1px dotted #DDD; }
+  .summary-box-body ul li:last-child { border-bottom: none; }
+
+  /* FOOTER */
+  .doc-footer {
+    margin-top: 32px;
+    padding-top: 18px;
+    border-top: 1px solid #DADADA;
+    font-size: 11px;
+    color: #AAA;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+  <div class="doc-header">
+    <div class="doc-brand">TRS AUTO — 信用回復ローン</div>
+    <div class="doc-title">信用回復ローン 概要説明</div>
+    <div class="doc-subtitle">審査・メリット・注意点をわかりやすくご説明します</div>
+    <div class="doc-meta">
+      <span><b>対象：</b>信用情報に不安のある方</span>
+      <span><b>最終更新：</b>2025年4月</span>
+      <span><b>作成：</b>TRS AUTO</span>
+    </div>
+  </div>
+
+  <div class="toc-wrap">
+    <div class="toc-title">目次</div>
+    <table class="toc-table">
+      <tr><td>1.</td><td>信用回復ローンとは</td><td>2.</td><td>TRS AUTOで審査が通る理由</td></tr>
+      <tr><td>3.</td><td>信用回復ローンが必要な背景</td><td>4.</td><td>4つのメリット</td></tr>
+      <tr><td>5.</td><td>注意点とリスク</td><td>6.</td><td>申込から納車までの流れ</td></tr>
+      <tr><td>7.</td><td>信用回復ローン vs カーリース</td><td>8.</td><td>審査が通りやすい方・難しい方</td></tr>
+      <tr><td>9.</td><td>やってはいけない例</td><td>10.</td><td>よくある質問（FAQ）</td></tr>
+    </table>
+  </div>
+
+  <!-- S1 -->
+  <div class="doc-section">
+    <div class="sec-heading">
+      <span class="sec-num">1</span>
+      <h2 class="sec-h">信用回復ローンとは</h2>
+    </div>
+    <p class="body-text">信用回復ローンとは、TRS AUTOが、過去の返済遅れ・借金の整理・自己破産などで信用情報に傷がある方に向けてご案内している自動車ローンの一種です。通常のカーローンでは審査が通りにくい方でもご相談いただける仕組みで、毎月の返済を続けることで信用情報を少しずつ回復させることを目的としています。</p>
+
+    <h3 class="sub-h">対象となる方</h3>
+    <ul class="doc-list">
+      <li>過去にローンの返済を遅れたことがある方</li>
+      <li>借金の整理（任意整理・個人再生）を経験した方</li>
+      <li>自己破産後にもう一度始めたい方</li>
+      <li>クレジットカードが作れない状態の方</li>
+    </ul>
+
+    <h3 class="sub-h">得られる主な効果</h3>
+    <ul class="doc-list check">
+      <li>生活・通勤に必要な移動手段（車）を手に入れられる</li>
+      <li>返済実績を積み重ねることで、将来の金融審査が通りやすくなる</li>
+    </ul>
+
+    <h3 class="sub-h">通常ローンとの主な違い</h3>
+    <ul class="doc-list">
+      <li>信用情報に傷があっても審査の対象になります</li>
+      <li>金利はやや高めに設定されています</li>
+      <li>車の所有権は完済までTRS AUTOが持つ場合があります</li>
+    </ul>
+  </div>
+
+  <!-- S2 -->
+  <div class="doc-section">
+    <div class="sec-heading">
+      <span class="sec-num">2</span>
+      <h2 class="sec-h">TRS AUTOで審査が通る理由</h2>
+    </div>
+    <p class="body-text">TRS AUTOでは、お客様がローンを組む際に、<strong>TRS AUTO自身が連帯保証人</strong>になります。これが一般的な信用回復ローンとの最大の違いです。連帯保証によってリスクを担保するため、GPS設置が不要で、比較的合理的な金利設定が可能になります。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>比較項目</th>
+            <th>TRS AUTOの信用回復ローン</th>
+            <th>一般的な信用回復ローン</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>審査が通る仕組み</td>
+            <td class="trs-col">TRS AUTOが連帯保証人になるため審査が通りやすい</td>
+            <td>GPS設置・所有権留保でリスクをカバー</td>
+          </tr>
+          <tr>
+            <td>金利の考え方</td>
+            <td class="trs-col">連帯保証でリスクを抑えるため、比較的合理的</td>
+            <td>リスクを金利で補うため高めになりやすい</td>
+          </tr>
+          <tr>
+            <td>GPS設置</td>
+            <td class="trs-col">不要</td>
+            <td>多くの場合、必要</td>
+          </tr>
+          <tr>
+            <td>所有権</td>
+            <td class="trs-col">完済後にお客様へ移転</td>
+            <td>完済まで業者が保有（業者による）</td>
+          </tr>
+          <tr>
+            <td>信用情報への記録</td>
+            <td class="trs-col">返済実績が信用情報機関に記録され、信用回復につながる</td>
+            <td>業者によって異なる</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="notice notice-warn">
+      TRS AUTOが連帯保証人となる以上、返済の遅れはTRS AUTOにも直接影響します。そのため、返済を確実に続けていただけるお客様を大切にしています。
+    </div>
+  </div>
+
+  <!-- S3 -->
+  <div class="doc-section">
+    <div class="sec-heading">
+      <span class="sec-num">3</span>
+      <h2 class="sec-h">信用回復ローンが必要な背景</h2>
+    </div>
+    <p class="body-text">信用情報機関（CIC・JICC・全情連）に登録された「事故情報」は、一般的に5〜10年間は記録として残り続けます。その期間中、通常の金融機関やカーディーラーのローン審査に通ることはほぼ不可能です。</p>
+
+    <h3 class="sub-h">信用情報の傷による主な影響</h3>
+    <ul class="doc-list">
+      <li><strong>クレジットカードが作れない</strong>——コンビニやネットでの支払いに不便が生じます</li>
+      <li><strong>住宅ローンを組めない</strong>——銀行・信金・フラット35のいずれも信用情報を厳しく確認します</li>
+      <li><strong>車のローンが通らない</strong>——ディーラーローンも銀行マイカーローンも利用できない状況になります</li>
+      <li><strong>賃貸契約に影響が出ることがある</strong>——家賃保証会社の審査が通らず、物件探しに苦労する場合があります</li>
+    </ul>
+
+    <div class="notice notice-info">
+      「時間がたてば自然に解決する」と思って何もしないでいると、回復の機会を逃すだけでなく、生活の不便が長引きます。信用回復には積極的な行動が必要です。
+    </div>
+  </div>
+
+  <!-- S4 -->
+  <div class="doc-section">
+    <div class="sec-heading">
+      <span class="sec-num">4</span>
+      <h2 class="sec-h">4つのメリット</h2>
+    </div>
+    <p class="body-text">TRS AUTOの信用回復ローンには、「車が手に入る」以上のメリットがあります。正しく活用すれば、将来の家計全体を立て直すきっかけになります。</p>
+
+    <h3 class="sub-h">メリット1　信用情報がよくなる</h3>
+    <p class="body-text">毎月の返済が信用情報機関に「きちんと返済した記録」として残ります。事故情報があっても、新しい返済実績が積み重なることで評価が少しずつ回復していきます。</p>
+
+    <h3 class="sub-h">メリット2　将来の金融審査が通りやすくなる</h3>
+    <p class="body-text">2〜3年間きちんと返済を続けると、クレジットカードや住宅ローンの審査が通りやすくなる場合があります。返済実績は大切な信用になります。</p>
+
+    <h3 class="sub-h">メリット3　車が自分のものになる</h3>
+    <p class="body-text">完済後は車の所有権が移り、あなたの資産になります。売却や下取りで現金に換えることもでき、「使いながら自分のものを持てる」という点が大きな違いです。</p>
+
+    <h3 class="sub-h">メリット4　分割払いで負担を軽くできる</h3>
+    <p class="body-text">一括購入が難しい場合でも、月々の分割払いで車を利用できます。まとまった現金を手元に残しながら移動手段を確保できます。</p>
+  </div>
+
+  <!-- S5 -->
+  <div class="doc-section">
+    <div class="sec-heading">
+      <span class="sec-num">5</span>
+      <h2 class="sec-h">注意点とリスク</h2>
+    </div>
+    <p class="body-text">「何でも申し込める」「必ず審査に通る」といった表現は事実ではありません。以下の注意点をご理解の上でご判断ください。</p>
+
+    <h3 class="sub-h">（1）金利が高い</h3>
+    <p class="body-text">一般的なカーローン（年利2〜5%程度）と比べてかなり高く、年利15〜20%前後になる場合もあります。TRS AUTOがリスクを金利に反映しているためです。</p>
+
+    <h3 class="sub-h">（2）総支払額が大幅に増える</h3>
+    <p class="body-text">たとえば100万円の車を5年ローンで組んだ場合、高い金利では総支払額が130〜140万円を超えることがあります。月々の支払額だけで判断しないでください。</p>
+
+    <h3 class="sub-h">（3）GPS・所有権留保などの制約がある</h3>
+    <p class="body-text">完済までは車の所有権がTRS AUTOに残されます。返済が遅れた場合、車が引き上げられることがあります。プライバシーや利用範囲に制約があることをご理解の上で契約してください。</p>
+
+    <h3 class="sub-h">（4）「審査が甘い」という誤解</h3>
+    <p class="body-text">信用情報に問題があってもお申し込みいただけますが、誰でも必ず通るわけではありません。収入の安定性・借入状況・過去の事故内容によってはお断りする場合があります。</p>
+
+    <div class="notice notice-danger">
+      注意：契約前に必ず「総支払額（元金＋利息の合計）」を確認してからご判断ください。月々の支払額だけで判断するのは危険です。
+    </div>
+  </div>
+
+  <!-- S6 -->
+  <div class="doc-section">
+    <div class="sec-heading">
+      <span class="sec-num">6</span>
+      <h2 class="sec-h">申込から納車までの流れ</h2>
+    </div>
+    <p class="body-text">TRS AUTOでの流れは以下の6ステップです。各段階で必要な対応を事前に把握しておきましょう。</p>
+
+    <ol class="step-list">
+      <li>
+        <span class="step-step-label">STEP 1</span>
+        <strong>申込（ネット・電話）</strong>
+        <span>氏名・住所・勤務先・年収・希望車種などをお伝えください。この段階では信用情報の確認は行われないことがほとんどです。</span>
+      </li>
+      <li>
+        <span class="step-step-label">STEP 2</span>
+        <strong>仮審査（数時間〜翌営業日）</strong>
+        <span>ご提出いただいた内容をもとにTRS AUTOの担当者が確認を行います。結果はメールまたは電話でご連絡します。</span>
+      </li>
+      <li>
+        <span class="step-step-label">STEP 3</span>
+        <strong>本審査（書類提出）</strong>
+        <span>給与明細・源泉徴収票などの収入証明書類・身分証明書などをご提出いただきます。信用情報の確認もこの段階で行います。</span>
+      </li>
+      <li>
+        <span class="step-step-label">STEP 4</span>
+        <strong>契約（内容確認）</strong>
+        <span>ローン契約書・車両売買契約書に署名・押印いただきます。金利・返済回数・総支払額・所有権留保の条件を必ずご確認ください。</span>
+      </li>
+      <li>
+        <span class="step-step-label">STEP 5</span>
+        <strong>納車（車の受取）</strong>
+        <span>契約完了後、車の整備を経て納車されます。納車時に担当者より詳細をご説明します。</span>
+      </li>
+      <li>
+        <span class="step-step-label">STEP 6</span>
+        <strong>返済（毎月の支払い）</strong>
+        <span>口座振替で毎月決まった額を返済します。引き落とし日前日には必ず残高を確認する習慣をつけてください。</span>
+      </li>
+    </ol>
+  </div>
+
+  <!-- S7 -->
+  <div class="doc-section">
+    <div class="sec-heading">
+      <span class="sec-num">7</span>
+      <h2 class="sec-h">信用回復ローン vs カーリース</h2>
+    </div>
+    <p class="body-text">「信用回復ローン」と「カーリース」は混同されがちですが、目的も仕組みもまったく異なります。信用情報に不安がある方を前提に比較します。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>比較項目</th>
+            <th>信用回復ローン（TRS AUTO）</th>
+            <th>カーリース</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>所有権</td>
+            <td class="trs-col">返済中はTRS AUTO、完済後にお客様へ移転</td>
+            <td>契約期間中はリース会社（原則返却）</td>
+          </tr>
+          <tr>
+            <td>目的</td>
+            <td class="trs-col">信用情報の回復 + 車の取得</td>
+            <td>毎月定額で車を使うこと</td>
+          </tr>
+          <tr>
+            <td>審査の厳しさ</td>
+            <td class="trs-col">信用情報に不安がある方もご相談可（通る保証はなし）</td>
+            <td>比較的厳しい場合もある</td>
+          </tr>
+          <tr>
+            <td>金利・費用</td>
+            <td class="trs-col">金利がかかる（総支払額が増える場合あり）</td>
+            <td>金利なし（月額料金制）</td>
+          </tr>
+          <tr>
+            <td>走行距離制限</td>
+            <td class="trs-col">なし</td>
+            <td>あり（超えると追加料金）</td>
+          </tr>
+          <tr>
+            <td>改造・変更</td>
+            <td class="trs-col">完済後は自由</td>
+            <td>基本的にできない</td>
+          </tr>
+          <tr>
+            <td>信用情報への影響</td>
+            <td class="trs-col">返済実績が記録され、信用回復につながる</td>
+            <td>会社によって異なる</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="body-text">信用回復を目的とするならTRS AUTOの信用回復ローン、「とにかく安く車に乗りたい」ならカーリースが選択肢になります。ただしカーリースにも審査があるため、信用情報の状態がかなり厳しい場合は選べないこともあります。</p>
+  </div>
+
+  <!-- S8 -->
+  <div class="doc-section">
+    <div class="sec-heading">
+      <span class="sec-num">8</span>
+      <h2 class="sec-h">審査が通りやすい方・難しい方</h2>
+    </div>
+    <p class="body-text">申し込めることと「審査を通過できること」は別の話です。TRS AUTOは以下の要素を総合的に判断します。</p>
+
+    <h3 class="sub-h">審査が通りやすい傾向の方</h3>
+    <ul class="doc-list check">
+      <li>毎月安定した収入がある（正社員・長期アルバイトなど）</li>
+      <li>現在の借入件数・残高が少ない</li>
+      <li>過去の事故から一定期間が経っている</li>
+      <li>直近6ヶ月以内に新たな延滞がない</li>
+      <li>頭金を用意できる</li>
+      <li>希望車種の価格が収入に見合っている</li>
+    </ul>
+
+    <h3 class="sub-h">審査が難しくなりやすい傾向の方</h3>
+    <ul class="doc-list cross">
+      <li>収入が不安定・無職・フリーランスで収入証明が難しい</li>
+      <li>現在も複数社に借入がある</li>
+      <li>直近で延滞・事故が発生している</li>
+      <li>希望金額が年収の3分の1を超える</li>
+      <li>過去に信用回復ローンを途中解約・引き上げされた経験がある</li>
+    </ul>
+
+    <div class="notice notice-info">
+      審査通過の最大の決め手は「今の返済能力」です。過去の傷よりも、今の収入と借入状況のほうが重視される傾向があります。現状を正直に申告してください。
+    </div>
+  </div>
+
+  <!-- S9 -->
+  <div class="doc-section">
+    <div class="sec-heading">
+      <span class="sec-num">9</span>
+      <h2 class="sec-h">やってはいけない例</h2>
+    </div>
+    <p class="body-text">以下は失敗につながる代表的なパターンです。契約前・利用中に必ずご確認ください。</p>
+
+    <h3 class="sub-h">収入が不安定なのに無理して申し込む</h3>
+    <p class="body-text">「なんとかなるだろう」という楽観的な見通しで返済額を決めると、数ヶ月後に行き詰まります。申込前に3ヶ月分の収支を書き出し、返済に回せる金額を冷静に計算してください。</p>
+
+    <h3 class="sub-h">他の借入を隠して申し込む</h3>
+    <p class="body-text">今ある借入を正直に申告しないと後のトラブルの原因になります。審査の際に信用情報を確認するため、事実と異なる申告をしても審査に通るわけではなく、契約解除の理由にもなります。</p>
+
+    <h3 class="sub-h">総支払額を確認せず月々の安さだけで判断する</h3>
+    <p class="body-text">月々の支払いが2万円でも、60回払いなら合計120万円。さらに高い金利がかかると総支払額が180万円を超えることもあります。必ず「支払総額」を契約書で確認してから判断してください。</p>
+
+    <h3 class="sub-h">返済が遅れそうでも業者に連絡しない</h3>
+    <p class="body-text">「少し待ってもらえば…」と黙って放置すると、延滞が確定し信用情報に傷がつきます。支払いが難しくなりそうな時点で、TRS AUTOにすぐご連絡ください。</p>
+
+    <div class="summary-box">
+      <div class="summary-box-header">契約前に必ず確認すべき5項目</div>
+      <div class="summary-box-body">
+        <ul>
+          <li>（1）総支払額（元金＋利息の合計）</li>
+          <li>（2）所有権留保の条件（完済後の移転タイミング）</li>
+          <li>（3）GPS設置の有無と管理方法</li>
+          <li>（4）途中解約・繰り上げ返済の条件と手数料</li>
+          <li>（5）車の引き上げ条件（何ヶ月延滞で対象になるか）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- S10 -->
+  <div class="doc-section">
+    <div class="sec-heading">
+      <span class="sec-num">10</span>
+      <h2 class="sec-h">よくある質問（FAQ）</h2>
+    </div>
+
+    <ul class="faq-list">
+      <li class="faq-item">
+        <div class="faq-q"><span class="faq-qlabel">Q.</span>本当に信用は回復するのですか？</div>
+        <div class="faq-a"><span class="faq-alabel">A.</span>TRS AUTOの信用回復ローンでは、返済実績が信用情報機関に記録されます。事故情報が消えるわけではありませんが、きちんと返済した記録が積み重なることで評価は少しずつよくなります。「回復」とは事故情報が消えることではなく、新しい良い記録を積み重ねることです。</div>
+      </li>
+      <li class="faq-item">
+        <div class="faq-q"><span class="faq-qlabel">Q.</span>信用が回復するまで何年かかりますか？</div>
+        <div class="faq-a"><span class="faq-alabel">A.</span>事故情報は一般的にCICで5年、JICCで5年、全情連で5〜10年で自然に消えます。TRS AUTOの信用回復ローンで返済を続けている期間もその時間は進んでいます。返済しながら自然に時間が経つのを待つのが最も効率的な方法です。</div>
+      </li>
+      <li class="faq-item">
+        <div class="faq-q"><span class="faq-qlabel">Q.</span>頭金は必ず必要ですか？</div>
+        <div class="faq-a"><span class="faq-alabel">A.</span>プランによって頭金の有無が異なります。頭金をご用意いただくことで審査に通りやすくなり、月々の返済額や総支払額を抑えられます。頭金なしのプランもありますが、その分利息が高くなる傾向があります。可能であれば10〜30万円程度のご準備をおすすめします。</div>
+      </li>
+      <li class="faq-item">
+        <div class="faq-q"><span class="faq-qlabel">Q.</span>途中で解約することはできますか？</div>
+        <div class="faq-a"><span class="faq-alabel">A.</span>繰り上げ返済や途中解約が可能な場合がありますが、違約金・手数料が発生することがあります。また、残りの借金が車の現在の価値を上回っている場合は、解約しても損失が生じることがあります。契約前に必ず条件をご確認ください。</div>
+      </li>
+      <li class="faq-item">
+        <div class="faq-q"><span class="faq-qlabel">Q.</span>自己破産後でも申し込めますか？</div>
+        <div class="faq-a"><span class="faq-alabel">A.</span>自己破産後でもお申し込みいただける場合があります。ただし、免責決定から一定期間（目安：1〜2年以上）が経過していることや、現在安定した収入があることが条件となる場合が多いです。破産直後のお申し込みは難しいことが多いとご理解ください。</div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="doc-footer">
+    <p>本ページの情報は、誇張や言い切りの表現を意図的に避け、一般的な事実や傾向にもとづいて作成しています。TRS AUTOの信用回復ローンに関する審査結果・金利・条件は、ご案内内容と個別のご状況によって異なります。最終的な判断は必ずTRS AUTOの担当者へのご相談をもとに行ってください。「必ず審査に通る」などの言い切り表現は使用しておりません。また、根拠のない数字・統計の掲載、読者の判断を急かす表現も用いておりません。</p>
+    <p style="margin-top:8px;">© TRS AUTO — 本ページの内容は予告なく変更される場合があります。</p>
+  </div>
+
+</div><!-- /page-wrap -->
+</body>
+</html>
